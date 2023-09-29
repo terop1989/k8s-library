@@ -6,7 +6,6 @@ def call(body) {
     body()
 
     throttleCategory = 'example'
-
     throttle([throttleCategory]) {
 
         node('master') {
@@ -21,15 +20,13 @@ def call(body) {
                     checkout scm
                     echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
                 }
-
             }
+
+            sh "ls -la"
 
             stage('Cleanup') {
                 deleteDir()
             }
-
         }
-
     }
-
 }
