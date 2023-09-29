@@ -26,12 +26,13 @@ def call(body) {
             sh "ls -la"
 
                 def k8sAgentFile = libraryResource 'k8s-agent.dockerfile'
-                    writeFile file: 'k8s-agent.dockerfile.ws', text: k8sAgentFile
+                    k8sAgentFileName = 'k8s-agent.dockerfile.ws'
+                    writeFile file: ${k8sAgentFileName} , text: k8sAgentFile
                     k8sAgentBuildName = 'k8s-agent:latest'
                     k8sAgentBuildArgs = ''
                     k8sAgentRunArgs = '-u 0:0'
             
-            def k8sAgent = docker.build("${k8sAgentBuildName}", "${k8sAgentBuildArgs} -f k8s-agent.dockerfile.ws .")
+            def k8sAgent = docker.build("${k8sAgentBuildName}", "${k8sAgentBuildArgs} -f ${k8sAgentFileName} .")
 
             stage('Cleanup') {
                 deleteDir()
