@@ -25,7 +25,7 @@ def call(body) {
             sh "pwd"
             sh "ls -la"
 
-            def k8sAagentFile = libraryResource 'k8s-agent.dockerfile'
+                writeFile file: 'k8s-agent.dockerfile', text:  (libraryResource 'k8s-agent.dockerfile')
                 k8sAgentBuildName = 'k8s-agent:latest'
                 k8sAgentBuildArgs = ''
                 k8sAgentRunArgs = '-u 0:0'
