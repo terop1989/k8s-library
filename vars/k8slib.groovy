@@ -17,14 +17,11 @@ def call(body) {
                 echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
             }
 
-            def k8sAgentFile = libraryResource 'k8s-agent.dockerfile'
-                k8sAgentFileName = 'k8s-agent.dockerfile.ws'
-                writeFile file: k8sAgentFileName , text: k8sAgentFile
-                k8sAgentBuildName = 'k8s-agent:latest'
-                k8sAgentBuildArgs = ''
-                k8sAgentRunArgs = '-u 0:0'
-            
-            def k8sAgent = docker.build("${k8sAgentBuildName}", "${k8sAgentBuildArgs} -f ${k8sAgentFileName} .")
+            def ResourceFolder = libraryResource 'folder1'
+                ResourceFolderWS = 'folder1.ws'
+                writeFile file: ResourceFolderWS , text: ResourceFolder
+
+                sh "ls -la"
 
             stage('Cleanup') {
                 deleteDir()
