@@ -25,8 +25,12 @@ def call(body) {
             sh "pwd"
             sh "ls -la"
 
-            def agent_file = libraryResource 'agent.dockerfile'
-            sh "cat $agent_file"
+            def k8sAagentFile = libraryResource 'k8s-agent.dockerfile'
+                k8sAgentBuildName = 'k8s-agent:latest'
+                k8sAgentBuildArgs = ''
+                k8sAgentRunArgs = '-u 0:0'
+            
+            def k8sAgent = docker.build("${k8sAgentBuildName}", "${k8sAgentBuildArgs} -f ${k8sAagentFile} .")
 
             stage('Cleanup') {
                 deleteDir()
