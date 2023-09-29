@@ -12,18 +12,10 @@ def call(body) {
 
             cleanWs()
 
-            sh "mkdir app"
-
-            dir("app") {
-
-                stage('Checkout SCM') {
-                    checkout scm
-                    echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
-                }
+            stage('Checkout SCM') {
+                checkout scm
+                echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
             }
-
-            sh "pwd"
-            sh "ls -la"
 
             def k8sAgentFile = libraryResource 'k8s-agent.dockerfile'
                 k8sAgentFileName = 'k8s-agent.dockerfile.ws'
