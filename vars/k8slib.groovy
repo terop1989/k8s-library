@@ -25,6 +25,9 @@ def call(body) {
             sh "pwd"
             sh "ls -la"
 
+            def agent_file = libraryResource 'agent.dockerfile'
+            sh "cat $agent_file"
+
             stage('Cleanup') {
                 deleteDir()
             }
