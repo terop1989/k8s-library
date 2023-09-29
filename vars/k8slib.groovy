@@ -22,6 +22,7 @@ def call(body) {
                 }
             }
 
+            sh "pwd"
             sh "ls -la"
 
             stage('Cleanup') {
