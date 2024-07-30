@@ -13,8 +13,14 @@ def call(body) {
             cleanWs()
 
             stage('Checkout SCM') {
-                checkout scm
-                echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
+                
+                sh "mkdir library"
+
+                dir("library") {
+                    checkout scm
+                    echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
+                }
+
             }
 
             def ResourceFolder = libraryResource 'folder1'
