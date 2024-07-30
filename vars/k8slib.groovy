@@ -23,7 +23,8 @@ def call(body) {
 
                 dir('app'){
                     checkout scm
-                    sh "docker build -t ${pipelineParams.projectName}:latest ./app/"
+                    release_number = env.TAG_NAME.split('-')[0]
+                    sh "docker build -t ${pipelineParams.projectName}:${release_number} ./app/"
                 }
             }
 
