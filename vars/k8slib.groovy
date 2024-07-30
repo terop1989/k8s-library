@@ -17,7 +17,7 @@ def call(body) {
                 sh "mkdir library"
 
                 dir("library") {
-                    checkout scm
+                    git branch: 'resources_folder', url: 'https://github.com/terop1989/k8s-library.git'
                     echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
                 }
 
