@@ -14,13 +14,17 @@ def call(body) {
 
             stage('Checkout SCM') {
                 
-                sh "mkdir library"
+                sh "mkdir library app"
 
                 dir("library") {
                     git branch: 'resources_folder', url: 'https://github.com/terop1989/k8s-library.git'
                     echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
                 }
 
+                dir('app'){
+                    checkout scm
+                    sh "docker build -t ${pipelineParams.projectName}:latest ./app/"
+                }
             }
 
             def ResourceFolder = libraryResource 'folder1'
