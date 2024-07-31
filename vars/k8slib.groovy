@@ -48,6 +48,18 @@ def call(body) {
                     HelmAgentRunArgs = " -u 0:0"
 
                     def RunAgent = docker.build("${HelmAgentBuildName}", "${HelmAgentBuildArgs} -f ${HelmAgentDockerfileName} .")
+
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD'),
+                        file(credentialsId: 'k8s-config', variable: 'K8S_CONFIG')
+                        ]){
+                            RunAgent.inside("${jenkinsAgentRunArgs}") {
+                                sh  """
+                                    mkdir -p ~/.kube
+                                    cat ${K8S_CONFIG} > ~/.kube/config
+                                    """
+                                }
+                           }
                 }
             }
 
