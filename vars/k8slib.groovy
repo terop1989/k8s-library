@@ -27,8 +27,10 @@ def call(body) {
             }
 
             stage('Build App Image') {
-                release_number = env.TAG_NAME.split('-')[0]
-                sh "docker build -t ${pipelineParams.projectName}:${release_number} ./app/"
+                dir('app'){
+                    release_number = env.TAG_NAME.split('-')[0]
+                    sh "docker build -t ${pipelineParams.projectName}:${release_number} ./app/"
+                }
             }
 
             stage('Cleanup') {
