@@ -27,8 +27,8 @@ def call(body) {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh """
                         docker login ${DockerRepositoryAddress} -u $DOCKER_USER -p $DOCKER_PASSWORD
-                        docker build -t ${DOCKER_USER}/${pipelineParams.projectName}:${release_number} ./app/
-                        docker push     ${DOCKER_USER}/${pipelineParams.projectName}:${release_number}
+                        docker build -t ${DockerRepositoryAddress}/${DOCKER_USER}/${pipelineParams.projectName}:${release_number} ./app/
+                        docker push     ${DockerRepositoryAddress}/${DOCKER_USER}/${pipelineParams.projectName}:${release_number}
                         """
                     }
                 }
@@ -48,6 +48,11 @@ def call(body) {
                     HelmAgentRunArgs = " -u 0:0"
                     release_number = env.TAG_NAME.split('-')[0]
 
+                    app_name = ${pipelineParams.projectName}
+                    app_namespace = "flask-ns"
+
+                    DockerRepositoryAddress='docker.io'
+
                     def RunAgent = docker.build("${HelmAgentBuildName}", "${HelmAgentBuildArgs} -f ${HelmAgentDockerfileName} .")
 
                     withCredentials([
@@ -58,8 +63,16 @@ def call(body) {
                                 sh  """
                                     mkdir -p ~/.kube
                                     cat ${K8S_CONFIG} > ~/.kube/config
-                                    sed -i 's/app-name/${pipelineParams.projectName}/' resources/k8s/helm/Chart.yaml
+                                    sed -i 's/app-name/${app_name}/' resources/k8s/helm/Chart.yaml
                                     sed -i 's/1.0.0/${release_number}/' resources/k8s/helm/Chart.yaml
+                                    helm upgrade ${app_name} helm/ -n ${app_namespace} \
+                                    --set imageCredentials.registry=${DockerRepositoryAddress} \
+                                    --set imageCredentials.username=${DOCKER_USER} \
+                                    --set imageCredentials.password=${DOCKER_PASSWORD} \
+                                    --set container.image=${DockerRepositoryAddress}/${DOCKER_USER}/${pipelineParams.projectName}:${release_number} \
+
+                                    --create-namespace \
+                                    --install
                                     """
                                 }
                            }
