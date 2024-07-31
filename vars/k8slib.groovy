@@ -57,6 +57,7 @@ def call(body) {
                                 sh  """
                                     mkdir -p ~/.kube
                                     cat ${K8S_CONFIG} > ~/.kube/config
+                                    sed -i 's/app-name/${pipelineParams.projectName}/' resources/k8s/helm/Chart.yaml
                                     """
                                 }
                            }
