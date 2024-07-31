@@ -44,7 +44,7 @@ def call(body) {
 
                 dir("library") {
 
-                    git branch: 'resources_folder', url: 'https://github.com/terop1989/k8s-library.git'
+                    git branch: 'master', url: 'https://github.com/terop1989/k8s-library.git'
 
                     HelmAgentDockerfileName = 'resources/k8s/helm-agent.dockerfile'
                     HelmAgentBuildName = 'agent:latest'
