@@ -46,6 +46,7 @@ def call(body) {
                     HelmAgentBuildName = 'agent:latest'
                     HelmAgentBuildArgs = ''
                     HelmAgentRunArgs = " -u 0:0"
+                    release_number = env.TAG_NAME.split('-')[0]
 
                     def RunAgent = docker.build("${HelmAgentBuildName}", "${HelmAgentBuildArgs} -f ${HelmAgentDockerfileName} .")
 
@@ -58,6 +59,7 @@ def call(body) {
                                     mkdir -p ~/.kube
                                     cat ${K8S_CONFIG} > ~/.kube/config
                                     sed -i 's/app-name/${pipelineParams.projectName}/' resources/k8s/helm/Chart.yaml
+                                    sed -i 's/1.0.0/${release_number}/' resources/k8s/helm/Chart.yaml
                                     """
                                 }
                            }
