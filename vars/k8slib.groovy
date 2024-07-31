@@ -23,16 +23,13 @@ def call(body) {
 
                 dir('app'){
                     checkout scm
-                    release_number = env.TAG_NAME.split('-')[0]
-                    sh "docker build -t ${pipelineParams.projectName}:${release_number} ./app/"
                 }
             }
 
-            def ResourceFolder = libraryResource 'folder1'
-                ResourceFolderWS = 'folder1.ws'
-                writeFile file: ResourceFolderWS , text: ResourceFolder
-
-                sh "ls -la"
+            stage('Build App Image') {
+                release_number = env.TAG_NAME.split('-')[0]
+                sh "docker build -t ${pipelineParams.projectName}:${release_number} ./app/"
+            }
 
             stage('Cleanup') {
                 deleteDir()
