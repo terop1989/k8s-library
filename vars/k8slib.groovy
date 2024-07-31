@@ -29,7 +29,14 @@ def call(body) {
             stage('Build App Image') {
                 dir('app'){
                     release_number = env.TAG_NAME.split('-')[0]
-                    sh "docker build -t ${pipelineParams.projectName}:${release_number} ./app/"
+                    
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh """
+                        docker login ${DockerRepositoryAddress} -u $DOCKER_USER -p $DOCKER_PASSWORD
+                        docker build -t ${DOCKER_USER}/${pipelineParams.projectName}:${release_number} ./app/
+                        docker push     ${DOCKER_USER}/${pipelineParams.projectName}:${release_number}
+                        """
+                    }
                 }
             }
 
