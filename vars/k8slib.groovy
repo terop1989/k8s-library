@@ -14,6 +14,7 @@ def call(body) {
 
             app_name = "${pipelineParams.projectName}"
             app_namespace = "flask-ns"
+            k8s_suffix = "local.con"
 
             DockerRepositoryAddress='docker.io'
             release_number = env.TAG_NAME.split('-')[0]
@@ -68,6 +69,7 @@ def call(body) {
                                     --set imageCredentials.username=${DOCKER_USER} \
                                     --set imageCredentials.password=${DOCKER_PASSWORD} \
                                     --set container.image=${DockerRepositoryAddress}/${DOCKER_USER}/${app_name}:${release_number} \
+                                    --set ingress.host=${app_name}.${k8s_suffix} \
                                     --create-namespace \
                                     --install
                                     """
