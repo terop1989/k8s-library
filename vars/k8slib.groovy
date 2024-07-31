@@ -70,7 +70,6 @@ def call(body) {
                                     --set imageCredentials.username=${DOCKER_USER} \
                                     --set imageCredentials.password=${DOCKER_PASSWORD} \
                                     --set container.image=${DockerRepositoryAddress}/${DOCKER_USER}/${pipelineParams.projectName}:${release_number} \
-
                                     --create-namespace \
                                     --install
                                     """
