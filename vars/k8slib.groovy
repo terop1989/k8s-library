@@ -48,7 +48,7 @@ def call(body) {
                     HelmAgentRunArgs = " -u 0:0"
                     release_number = env.TAG_NAME.split('-')[0]
 
-                    app_name = pipelineParams.projectName
+                    app_name = "${pipelineParams.projectName}"
                     app_namespace = "flask-ns"
 
                     DockerRepositoryAddress='docker.io'
