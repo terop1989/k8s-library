@@ -14,20 +14,21 @@ def call(body) {
 
             stage('Checkout SCM') {
                 
-                sh "mkdir library app"
+                sh "mkdir library"
 
                 dir("library") {
                     git branch: 'resources_folder', url: 'https://github.com/terop1989/k8s-library.git'
                     echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
                 }
-
-                dir('app'){
-                    checkout scm
-                }
             }
 
             stage('Build App Image') {
+
+                sh "mkdir app"
+
                 dir('app'){
+
+                    checkout scm
                     DockerRepositoryAddress='docker.io'
                     release_number = env.TAG_NAME.split('-')[0]
                     
