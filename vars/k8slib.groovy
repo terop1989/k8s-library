@@ -65,7 +65,7 @@ def call(body) {
                                     cat ${K8S_CONFIG} > ~/.kube/config
                                     sed -i 's/app-name/${app_name}/' resources/k8s/helm/Chart.yaml
                                     sed -i 's/1.0.0/${release_number}/' resources/k8s/helm/Chart.yaml
-                                    helm upgrade ${app_name} helm/ -n ${app_namespace} \
+                                    helm upgrade ${app_name} resources/k8s/helm/ -n ${app_namespace} \
                                     --set imageCredentials.registry=${DockerRepositoryAddress} \
                                     --set imageCredentials.username=${DOCKER_USER} \
                                     --set imageCredentials.password=${DOCKER_PASSWORD} \
