@@ -53,7 +53,7 @@ def call(body) {
                         usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD'),
                         file(credentialsId: 'k8s-config', variable: 'K8S_CONFIG')
                         ]){
-                            RunAgent.inside("${jenkinsAgentRunArgs}") {
+                            RunAgent.inside("${HelmAgentRunArgs}") {
                                 sh  """
                                     mkdir -p ~/.kube
                                     cat ${K8S_CONFIG} > ~/.kube/config
