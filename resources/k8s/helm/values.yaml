@@ -1,2 +1,6 @@
 container:
   port: 5000
+
+service:
+  port:
+    port_number: 80
