@@ -28,6 +28,7 @@ def call(body) {
 
             stage('Build App Image') {
                 dir('app'){
+                    DockerRepositoryAddress='docker.io'
                     release_number = env.TAG_NAME.split('-')[0]
                     
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
