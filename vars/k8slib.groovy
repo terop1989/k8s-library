@@ -12,6 +12,12 @@ def call(body) {
 
             cleanWs()
 
+            app_name = "${pipelineParams.projectName}"
+            app_namespace = "flask-ns"
+
+            DockerRepositoryAddress='docker.io'
+            release_number = env.TAG_NAME.split('-')[0]
+
             stage('Build App Image') {
 
                 sh "mkdir app"
@@ -20,15 +26,12 @@ def call(body) {
 
                     checkout scm
                     echo "Branch name is ${env.BRANCH_NAME}\nTag name is ${env.TAG_NAME}"
-                    release_number = env.TAG_NAME.split('-')[0]
-
-                    DockerRepositoryAddress='docker.io'
 
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh """
                         docker login ${DockerRepositoryAddress} -u $DOCKER_USER -p $DOCKER_PASSWORD
-                        docker build -t ${DockerRepositoryAddress}/${DOCKER_USER}/${pipelineParams.projectName}:${release_number} ./app/
-                        docker push     ${DockerRepositoryAddress}/${DOCKER_USER}/${pipelineParams.projectName}:${release_number}
+                        docker build -t ${DockerRepositoryAddress}/${DOCKER_USER}/${app_name}:${release_number} ./app/
+                        docker push     ${DockerRepositoryAddress}/${DOCKER_USER}/${app_name}:${release_number}
                         """
                     }
                 }
@@ -46,12 +49,7 @@ def call(body) {
                     HelmAgentBuildName = 'agent:latest'
                     HelmAgentBuildArgs = ''
                     HelmAgentRunArgs = " -u 0:0"
-                    release_number = env.TAG_NAME.split('-')[0]
 
-                    app_name = "${pipelineParams.projectName}"
-                    app_namespace = "flask-ns"
-
-                    DockerRepositoryAddress='docker.io'
 
                     def RunAgent = docker.build("${HelmAgentBuildName}", "${HelmAgentBuildArgs} -f ${HelmAgentDockerfileName} .")
 
@@ -69,7 +67,7 @@ def call(body) {
                                     --set imageCredentials.registry=${DockerRepositoryAddress} \
                                     --set imageCredentials.username=${DOCKER_USER} \
                                     --set imageCredentials.password=${DOCKER_PASSWORD} \
-                                    --set container.image=${DockerRepositoryAddress}/${DOCKER_USER}/${pipelineParams.projectName}:${release_number} \
+                                    --set container.image=${DockerRepositoryAddress}/${DOCKER_USER}/${app_name}:${release_number} \
                                     --create-namespace \
                                     --install
                                     """
